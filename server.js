@@ -84,7 +84,7 @@ Promise.all([fileReadPromise,
     betterTTVChannelEmotesPromise])
     .then(function () {
         const digitReg = /^\d+$/;
-        const emotesRegex = new RegExp("(" + new Set(function* () { yield* twitchEmotes; yield* betterTtvEmotes }()).join("|") + ")", 'g').compile();
+        const emotesRegex = new RegExp("(" + [...twitchEmotes, ...betterTtvEmotes].join("|") + ")", 'g').compile();
 
         bot.connect({
             host: 'irc.chat.twitch.tv',
