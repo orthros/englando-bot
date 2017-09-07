@@ -1,7 +1,7 @@
-var promisify = require("promisify-node");
+const promisify = require("promisify-node");
 const request = require("request-promise");
-var fs = promisify("fs");
-var endOfLine = require('os').EOL;
+const fs = promisify("fs");
+const endOfLine = require('os').EOL;
 
 const IRC = require('irc-framework');
 
