@@ -1,3 +1,4 @@
+require("dotenv").config();
 const promisify = require("promisify-node");
 const request = require("request-promise");
 const fs = promisify("fs");
@@ -71,6 +72,8 @@ var betterTTVChannelEmotesPromise = request("https://api.betterttv.net/2/channel
             betterTtvEmotes.add(emoteMatch[1].toLowerCase());
         }
     } while (emoteMatch);
+}).catch(function (error) {
+    //Just eat the 404 error.    
 });
 
 //Wait for us to read the english words, the twitch emotes and the better ttv emotes
