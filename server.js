@@ -37,21 +37,14 @@ var subscriberTwitchEmotesPromise = request("https://twitchemotes.com/api_cache/
     //A better solution might be to regex out for the 
     //  "emotes":[]
     //values and for each match, grab the emote code and add to the list
-    var emotesReg = /"emotes"\s*:\s*\[(?:{"id":\d+,"code":"[\w\d]+","emoticon_set":\d+},?)*\]/g;
-    var codeReg = /"code":"([\w\d]+)"/g;
-    var matchEmotesArray;
+    var emotesReg = /{"id":\d+,"code":"([\w\d]+)","emoticon_set":\d+}/g;
+    var emotesMatch;
     do {
-        matchEmotesArray = emotesReg.exec(jsonBody);
-        if (matchEmotesArray) {
-            var matchEmoteCode;
-            do {
-                matchEmoteCode = codeReg.exec(matchEmotesArray[0]);
-                if (matchEmoteCode) {
-                    twitchEmotes.add(matchEmoteCode[1].toLowerCase());
-                }
-            } while (matchEmoteCode);
+        emotesMatch = emotesReg.exec(jsonBody);
+        if (emotesMatch) {
+            twitchEmotes.add(emotesMatch[1].toLowerCase());
         }
-    } while (matchEmotesArray);
+    } while (emotesMatch);
 });
 //TODO: Promise to get all the BetterTTV Emotes
 
