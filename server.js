@@ -21,7 +21,6 @@ var fileReadPromise = fs.readFile("google-10000-english.txt").then(function (con
 });
 
 //TODO: Promise to get all the twitch emotes
-var twitchEmotesPromise
 //TODO: Promise to get all the BetterTTV Emotes
 
 //Wait for us to read the english words, the twitch emotes and the better ttv emotes
