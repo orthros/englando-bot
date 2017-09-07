@@ -13,7 +13,7 @@ var twitchEmotes = new Set();
 var betterTtvEmotes = new Set();
 
 //Promise to get the english file
-var fileRead = fs.readFile("google-10000-english.txt").then(function (contents) {
+var fileReadPromise = fs.readFile("google-10000-english.txt").then(function (contents) {
     console.log("Most common english words read")
     contents = contents.toString("utf-8");
     contents = contents.split(endOfLine);
@@ -21,11 +21,11 @@ var fileRead = fs.readFile("google-10000-english.txt").then(function (contents) 
 });
 
 //TODO: Promise to get all the twitch emotes
-
+var twitchEmotesPromise
 //TODO: Promise to get all the BetterTTV Emotes
 
 //Wait for us to read the english words, the twitch emotes and the better ttv emotes
-Promise.all([fileRead]).then(function () {
+Promise.all([fileReadPromise]).then(function () {
     bot.connect({
         host: 'irc.chat.twitch.tv',
         port: 6667,
