@@ -73,6 +73,10 @@ Promise.all([fileReadPromise, globalTwitchEmotesPromise]).then(function () {
 
             //At this point it would be wise for us to remove the
             //words that are only digits of some kind
+            const digitReg = /^\d+$/;
+            words = words.filter(function (word) {
+                return !digitReg.test(word);
+            })
 
             //Here is a point for some optimization.
             //If we are at a point where we have < X words
