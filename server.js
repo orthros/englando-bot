@@ -52,7 +52,6 @@ var betterTTVEmotesPromise = request("https://api.betterttv.net/emotes").then(fu
     //we could just look for the "regex" property of the json response and
     //add them that way
     //var objData = JSON.parse(jsonBody);
-    var i = 0;
     var emoteReg = /"regex"\s*:\s*"([\w\d\(\)':&]+)"/g;
     var emoteMatch;
     do {
