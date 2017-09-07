@@ -21,7 +21,7 @@ var fileReadPromise = fs.readFile("google-10000-english.txt").then(function (con
     commonEnglish = new Set(contents);
 });
 
-//Promise to get all the twitch emotes
+//Promise to get the Twitch global emotes
 var globalTwitchEmotesPromise = request("https://twitchemotes.com/api_cache/v3/global.json").then(function (jsonBody) {
     var jdata = JSON.parse(jsonBody);
     var keyData = Object.keys(jdata);
@@ -29,7 +29,7 @@ var globalTwitchEmotesPromise = request("https://twitchemotes.com/api_cache/v3/g
         twitchEmotes.add(value.toLowerCase());
     });
 });
-
+//Promise to get the Twitch Subscriber emotes
 var subscriberTwitchEmotesPromise = request("https://twitchemotes.com/api_cache/v3/subscriber.json").then(function (jsonBody) {
     //So this WORKS but the jsonBody object is so large
     //JSON.parse hangs indefinately    
