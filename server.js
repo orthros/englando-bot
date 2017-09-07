@@ -16,10 +16,10 @@ var betterTtvEmotes = new Set();
 
 //Promise to get the english file
 var fileReadPromise = fs.readFile("google-10000-english.txt").then(function (contents) {
-    console.log("Most common english words read")
     contents = contents.toString("utf-8");
     contents = contents.split(endOfLine);
     commonEnglish = new Set(contents);
+    console.log("Read the 10k top used english words");
 });
 
 //Promise to get the Twitch global emotes
@@ -29,6 +29,7 @@ var globalTwitchEmotesPromise = request("https://twitchemotes.com/api_cache/v3/g
     keyData.forEach(function (value) {
         twitchEmotes.add(value.toLowerCase());
     });
+    console.log("Got the global twitch emotes");
 });
 //Promise to get the Twitch Subscriber emotes
 var subscriberTwitchEmotesPromise = request("https://twitchemotes.com/api_cache/v3/subscriber.json").then(function (jsonBody) {
@@ -46,6 +47,7 @@ var subscriberTwitchEmotesPromise = request("https://twitchemotes.com/api_cache/
             twitchEmotes.add(emotesMatch[1].toLowerCase());
         }
     } while (emotesMatch);
+    console.log("Got emotes for all the partnered channels");
 });
 //Promise to get all the BetterTTV Global Emotes
 var betterTTVEmotesPromise = request("https://api.betterttv.net/emotes").then(function (jsonBody) {
@@ -61,6 +63,7 @@ var betterTTVEmotesPromise = request("https://api.betterttv.net/emotes").then(fu
             betterTtvEmotes.add(emoteMatch[1].toLowerCase());
         }
     } while (emoteMatch);
+    console.log("Got global emotes for BTTV");
 });
 //Promise to get all the BetterTTV Emotes for the current channel
 var betterTTVChannelEmotesPromise = request("https://api.betterttv.net/2/channels/" + process.env.TWITCH_CHANNEL).then(function (jsonBody) {
@@ -72,8 +75,10 @@ var betterTTVChannelEmotesPromise = request("https://api.betterttv.net/2/channel
             betterTtvEmotes.add(emoteMatch[1].toLowerCase());
         }
     } while (emoteMatch);
+    console.log("Got the BTTV emotes for channel " + process.env.TWITCH_CHANNEL);
 }).catch(function (error) {
-    //Just eat the 404 error.    
+    //Just eat the 404 error.
+    console.log("Error while getting the BTTV emotes for channel " + process.env.TWITCH_CHANNEL);
 });
 
 //Wait for us to read the english words, the twitch emotes and the better ttv emotes
@@ -92,7 +97,7 @@ Promise.all([fileReadPromise,
         });
 
         bot.on('registered', () => {
-            console.log('registered on twitch irc!');
+            console.log('Registered on twitch irc!');
             const channel = bot.channel("#" + process.env.TWITCH_CHANNEL);
             channel.join();
 
