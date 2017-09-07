@@ -146,7 +146,7 @@ Promise.all([fileReadPromise,
 
                 //Now go through all the words in the top 10k english words
                 //And count how many there are that are NON english
-                var nonEnglishWords = words.filter(function (word) {
+                var nonTop10kEnglish = words.filter(function (word) {
                     return !commonEnglish.has(word.toLowerCase());
                 });
 
@@ -154,15 +154,13 @@ Promise.all([fileReadPromise,
                 console.log("Processed Message");
                 console.log("  Original Message: " + event.message);
                 console.log("  Cleaned  Message: " + words.join(" "));
-                console.log("  Non Common English Words:" + endOfLine + "    " + nonEnglishWords.join("," + endOfLine + "    "));
-                console.log("  Ratio: " + nonEnglishWords.length / words.length);
+                console.log("  Non Common English Words:" + endOfLine + "    " + nonTop10kEnglish.join("," + endOfLine + "    "));
+                console.log("  Ratio: " + nonTop10kEnglish.length / words.length);
 
                 //If there are any non english we need to do some math
-                if (nonEnglishWords.length > 0) {
+                if (nonTop10kEnglish.length > 0) {
                     //First we'll calculate the ratio of non english words to english words
-                    var ratio = nonEnglishWords.length / words.length;
-
-                    //console.log(ratio);
+                    var ratio = nonTop10kEnglish.length / words.length;
 
                     //If the ratio is sufficently low (ie .1 or less) we can continue.
                     //Otherwise it might be nice to call out to the google language
