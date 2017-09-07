@@ -1,4 +1,5 @@
 var promisify = require("promisify-node");
+const request = require("request-promise");
 var fs = promisify("fs");
 var endOfLine = require('os').EOL;
 
@@ -20,11 +21,18 @@ var fileReadPromise = fs.readFile("google-10000-english.txt").then(function (con
     commonEnglish = new Set(contents);
 });
 
-//TODO: Promise to get all the twitch emotes
+//Promise to get all the twitch emotes
+var globalTwitchEmotesPromise = request("https://twitchemotes.com/api_cache/v3/global.json").then(function (jsonBody) {
+    var jdata = JSON.parse(jsonBody);
+    var keyData = Object.keys(jdata);
+    keyData.forEach(function (value) {
+        twitchEmotes.add(value.toLowerCase());
+    });
+});
 //TODO: Promise to get all the BetterTTV Emotes
 
 //Wait for us to read the english words, the twitch emotes and the better ttv emotes
-Promise.all([fileReadPromise]).then(function () {
+Promise.all([fileReadPromise, globalTwitchEmotesPromise]).then(function () {
     bot.connect({
         host: 'irc.chat.twitch.tv',
         port: 6667,
