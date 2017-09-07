@@ -80,6 +80,9 @@ Promise.all([fileReadPromise,
     betterTTVEmotesPromise,
     betterTTVChannelEmotesPromise])
     .then(function () {
+        const digitReg = /^\d+$/;
+        const emotesRegex = new RegExp("(" + new Set(function* () { yield* twitchEmotes; yield* betterTtvEmotes }()).join("|") + ")", 'g').compile();
+
         bot.connect({
             host: 'irc.chat.twitch.tv',
             port: 6667,
@@ -100,27 +103,20 @@ Promise.all([fileReadPromise,
                 //Aka: wow that orthros_ guy is pretty funny && makes puns in other languages
                 //     all the time, we should let him do non english phrases.
 
-                var message = event.message;
+                let message = event.message;
+                //Remove all the emotes first as some emotes can have punctuation
+                message = message.replace(emotesRegex, "");
                 //Remove all punctuation save for "@"
                 message = message.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
                 //Split the message by whitespace
-                var words = message.split(" ");
+                let words = message.split(" ");
                 //Remove all words beginning with "@" as they are username mentions
                 words = words.filter(function (word) {
                     return word.charAt(0) != "@";
                 });
-                //Remove the emotes
-                words = words.filter(function (word) {
-                    return !twitchEmotes.has(word);
-                });
-                //Then remove the better ttv emotes
-                words = words.filter(function (word) {
-                    return !betterTtvEmotes.has(word);
-                });
 
                 //At this point it would be wise for us to remove the
-                //words that are only digits of some kind
-                const digitReg = /^\d+$/;
+                //words that are only digits of some kind                
                 words = words.filter(function (word) {
                     return !digitReg.test(word);
                 })
