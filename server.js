@@ -46,10 +46,26 @@ var subscriberTwitchEmotesPromise = request("https://twitchemotes.com/api_cache/
         }
     } while (emotesMatch);
 });
-//TODO: Promise to get all the BetterTTV Emotes
+//Promise to get all the BetterTTV Global Emotes
+var betterTTVEmotesPromise = request("https://api.betterttv.net/emotes").then(function (jsonBody) {
+    //Once again we could json.parse this but looking at the response...
+    //we could just look for the "regex" property of the json response and
+    //add them that way
+    //var objData = JSON.parse(jsonBody);
+    var i = 0;
+    var emoteReg = /"regex"\s*:\s*"([\w\d\(\)':&]+)"/g;
+    var emoteMatch;
+    do {
+        emoteMatch = emoteReg.exec(jsonBody);
+        if (emoteMatch) {
+            betterTtvEmotes.add(emoteMatch[1].toLowerCase());
+        }
+    } while (emoteMatch);
+});
+//Promise to get all the BetterTTV Emotes for the current channel
 
 //Wait for us to read the english words, the twitch emotes and the better ttv emotes
-Promise.all([fileReadPromise, globalTwitchEmotesPromise, subscriberTwitchEmotesPromise]).then(function () {
+Promise.all([fileReadPromise, globalTwitchEmotesPromise, subscriberTwitchEmotesPromise, betterTTVEmotesPromise]).then(function () {
     bot.connect({
         host: 'irc.chat.twitch.tv',
         port: 6667,
