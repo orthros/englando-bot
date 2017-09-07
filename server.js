@@ -1,3 +1,4 @@
+require("dotenv").config();
 const promisify = require("promisify-node");
 const request = require("request-promise");
 const fs = promisify("fs");
