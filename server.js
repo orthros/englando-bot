@@ -29,10 +29,34 @@ var globalTwitchEmotesPromise = request("https://twitchemotes.com/api_cache/v3/g
         twitchEmotes.add(value.toLowerCase());
     });
 });
+
+var subscriberTwitchEmotesPromise = request("https://twitchemotes.com/api_cache/v3/subscriber.json").then(function (jsonBody) {
+    //So this WORKS but the jsonBody object is so large
+    //JSON.parse hangs indefinately    
+    //var jdata = JSON.parse(jsonBody);
+    //A better solution might be to regex out for the 
+    //  "emotes":[]
+    //values and for each match, grab the emote code and add to the list
+    var emotesReg = /"emotes"\s*:\s*\[(?:{"id":\d+,"code":"[\w\d]+","emoticon_set":\d+},?)*\]/g;
+    var codeReg = /"code":"([\w\d]+)"/g;
+    var matchEmotesArray;
+    do {
+        matchEmotesArray = emotesReg.exec(jsonBody);
+        if (matchEmotesArray) {
+            var matchEmoteCode;
+            do {
+                matchEmoteCode = codeReg.exec(matchEmotesArray[0]);
+                if (matchEmoteCode) {
+                    twitchEmotes.add(matchEmoteCode[1].toLowerCase());
+                }
+            } while (matchEmoteCode);
+        }
+    } while (matchEmotesArray);
+});
 //TODO: Promise to get all the BetterTTV Emotes
 
 //Wait for us to read the english words, the twitch emotes and the better ttv emotes
-Promise.all([fileReadPromise, globalTwitchEmotesPromise]).then(function () {
+Promise.all([fileReadPromise, globalTwitchEmotesPromise, subscriberTwitchEmotesPromise]).then(function () {
     bot.connect({
         host: 'irc.chat.twitch.tv',
         port: 6667,
