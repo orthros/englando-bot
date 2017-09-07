@@ -78,10 +78,11 @@ var betterTTVChannelEmotesPromise = request("https://api.betterttv.net/2/channel
 
 //Wait for us to read the english words, the twitch emotes and the better ttv emotes
 Promise.all([fileReadPromise,
-    globalTwitchEmotesPromise,
-    subscriberTwitchEmotesPromise,
-    betterTTVEmotesPromise,
-    betterTTVChannelEmotesPromise])
+        globalTwitchEmotesPromise,
+        subscriberTwitchEmotesPromise,
+        betterTTVEmotesPromise,
+        betterTTVChannelEmotesPromise
+    ])
     .then(function () {
         bot.connect({
             host: 'irc.chat.twitch.tv',
@@ -92,22 +93,24 @@ Promise.all([fileReadPromise,
 
         bot.on('registered', () => {
             console.log('registered on twitch irc!');
-            const channel = bot.channel(process.env.TWITCH_CHANNEL);
+            const channel = bot.channel("#" + process.env.TWITCH_CHANNEL);
             channel.join();
 
             //We'll match everything for now
             bot.matchMessage(new RegExp(), (event) => {
                 //simple debug statement to let you know things are working
-                console.log(event.nick + ': ' + event.message);
+                //console.log(event.nick + ': ' + event.message);
                 //This would be an interesting place to put in a whitelist of nicks. 
                 //Aka: wow that orthros_ guy is pretty funny && makes puns in other languages
                 //     all the time, we should let him do non english phrases.
 
                 var message = event.message;
                 //Remove all punctuation save for "@"
-                message = message.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+                message = message.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "");
                 //Split the message by whitespace
-                var words = message.split(" ");
+                var words = message.split(" ").map(function (word) {
+                    return word.toLowerCase();
+                });
                 //Remove all words beginning with "@" as they are username mentions
                 words = words.filter(function (word) {
                     return word.charAt(0) != "@";
@@ -147,12 +150,19 @@ Promise.all([fileReadPromise,
                     return !commonEnglish.has(word.toLowerCase());
                 });
 
+                //Some pretty easy debugging information
+                console.log("Processed Message");
+                console.log("  Original Message: " + event.message);
+                console.log("  Cleaned  Message: " + words.join(" "));
+                console.log("  Non Common English Words:" + endOfLine + "    " + nonEnglishWords.join("," + endOfLine + "    "));
+                console.log("  Ratio: " + nonEnglishWords.length / words.length);
+
                 //If there are any non english we need to do some math
                 if (nonEnglishWords.length > 0) {
                     //First we'll calculate the ratio of non english words to english words
                     var ratio = nonEnglishWords.length / words.length;
 
-                    console.log(ratio);
+                    //console.log(ratio);
 
                     //If the ratio is sufficently low (ie .1 or less) we can continue.
                     //Otherwise it might be nice to call out to the google language
