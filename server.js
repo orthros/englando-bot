@@ -103,8 +103,6 @@ Promise.all([fileReadPromise,
 
             //We'll match everything for now
             bot.matchMessage(new RegExp(), (event) => {
-                //simple debug statement to let you know things are working
-                //console.log(event.nick + ': ' + event.message);
                 //This would be an interesting place to put in a whitelist of nicks. 
                 //Aka: wow that orthros_ guy is pretty funny && makes puns in other languages
                 //     all the time, we should let him do non english phrases.
