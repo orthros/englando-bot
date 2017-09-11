@@ -3,7 +3,6 @@ const promisify = require("promisify-node");
 const request = require("request-promise");
 const fs = promisify("fs");
 const endOfLine = require('os').EOL;
-
 const IRC = require('irc-framework');
 
 const bot = new IRC.Client();
@@ -172,6 +171,30 @@ Promise.all([fileReadPromise,
                     //detection API.
                     //This costs 20$ for every million characters passed to it, which is why
                     //we are filtering out emotes etc to begin with
+
+                    if (process.env.GOOGLE_API_KEY) {
+                        var options = {
+                            method: 'POST',
+                            uri: 'https://translation.googleapis.com/language/translate/v2/detect?key=' + process.env.GOOGLE_API_KEY,
+                            body: {
+                                q: words.join(' ')
+                            },
+                            json: true // Automatically stringifies the body to JSON
+                        };
+                        var transPromise = request(options)
+                            .then((results) => {
+                                let detections = results.data.detections[0];
+
+                                console.log('Detections:');
+                                detections.forEach((detection) => {
+                                    console.log(`${detection.input} => ${detection.language}`);
+                                });
+                            })
+                            .catch((err) => {
+                                console.error('ERROR:', err);
+                            });
+                        Promise.all([transPromise]);
+                    }
                 }
             });
         });
