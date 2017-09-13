@@ -2,7 +2,7 @@ require("dotenv").config();
 const promisify = require("promisify-node");
 const request = require("request-promise");
 const fs = promisify("fs");
-const endOfLine = require('os').EOL;
+const EoL = require('os').EOL;
 
 const IRC = require('irc-framework');
 
@@ -17,7 +17,7 @@ var betterTtvEmotes = new Set();
 //Promise to get the english file
 var fileReadPromise = fs.readFile("google-10000-english.txt").then(function (contents) {
     contents = contents.toString("utf-8");
-    contents = contents.split(endOfLine);
+    contents = contents.split(EoL);
     commonEnglish = new Set(contents);
     console.log("Read the 10k top used english words");
 });
@@ -157,7 +157,7 @@ Promise.all([fileReadPromise,
                 console.log("Processed Message");
                 console.log("  Original Message: " + event.message);
                 console.log("  Cleaned  Message: " + words.join(" "));
-                console.log("  Non Common English Words:" + endOfLine + "    " + nonTop10kEnglish.join("," + endOfLine + "    "));
+                console.log("  Non Common English Words:" + EoL + "    " + nonTop10kEnglish.join("," + EoL + "    "));
                 console.log("  Ratio: " + nonTop10kEnglish.length / words.length);
 
                 //If there are any non english we need to do some math
