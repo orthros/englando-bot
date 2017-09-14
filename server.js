@@ -187,7 +187,7 @@ Promise.all([fileReadPromise,
 
                                 console.log('Detections:');
                                 detections.forEach((detection) => {
-                                    console.log(`${detection.input} => ${detection.language}`);
+                                    console.log(`${detection.language}`);
                                 });
                             })
                             .catch((err) => {
