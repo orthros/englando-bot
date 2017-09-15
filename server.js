@@ -162,7 +162,7 @@ Promise.all([fileReadPromise,
                 console.log("  Ratio: " + nonTop10kEnglish.length / words.length);
 
                 //If there are any non english we need to do some math
-                if (nonTop10kEnglish.length > 0) {
+                if (nonTop10kEnglish.length > 3) {
                     //First we'll calculate the ratio of non english words to english words
                     var ratio = nonTop10kEnglish.length / words.length;
 
@@ -172,7 +172,10 @@ Promise.all([fileReadPromise,
                     //This costs 20$ for every million characters passed to it, which is why
                     //we are filtering out emotes etc to begin with
 
-                    if (process.env.GOOGLE_API_KEY) {
+                    var shouldMessageUsers = ratio > .5;
+
+                    if (process.env.GOOGLE_API_KEY && !shouldMessageUsers) {
+                        var googleSaysIsEnglish = true;
                         var options = {
                             method: 'POST',
                             uri: 'https://translation.googleapis.com/language/translate/v2/detect?key=' + process.env.GOOGLE_API_KEY,
@@ -181,19 +184,33 @@ Promise.all([fileReadPromise,
                             },
                             json: true // Automatically stringifies the body to JSON
                         };
-                        var transPromise = request(options)
+                        var translatePromise = request(options)
                             .then((results) => {
                                 let detections = results.data.detections[0];
 
                                 console.log('Detections:');
                                 detections.forEach((detection) => {
-                                    console.log(`${detection.language}`);
+                                    console.log(`  Language: ${detection.language}`);
+                                    if (detection.language != 'en') {
+                                        googleSaysIsEnglish = false;
+                                    }
                                 });
                             })
                             .catch((err) => {
                                 console.error('ERROR:', err);
                             });
-                        Promise.all([transPromise]);
+                        Promise.all([translatePromise]);
+
+                        if (googleSaysIsEnglish) {
+                            shouldMessageUsers = false;
+                            //Perhaps add the words to a set of "GoogleApproved" words;
+                        } else {
+                            shouldMessageUsers = true;
+                        }
+                    }
+
+                    if (shouldMessageUsers) {
+                        event.reply(`Hey @${event.nick} I'm a bot, but please try to keep it English. Thanks!`);
                     }
                 }
             });
