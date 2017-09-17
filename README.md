@@ -28,7 +28,7 @@ This application uses several environment variables for configuration
 |TWITCH_TOKEN| The OAUTH API Key for authenticating to Twitch | Yes |
 |GOOGLE_API_KEY| Google Authentication token to the API Services for Language Detection  | No |
 
-## DotEnv
+## dotenv
 
 For developer convience this application uses [dotenv](https://www.npmjs.com/package/dotenv) which allows users to define a text file to set environment variables. See the `.env.example` file for the 
 
