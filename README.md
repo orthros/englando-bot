@@ -1,14 +1,14 @@
 # englando-bot
 
-Inspired by the !englando command on Elajjaz's twitch stream.
+Inspired by the `!englando` command on [Elajjaz's](https://www.twitch.tv/elajjaz) Twitch stream.
 
-Elajjaz lives in Sweden and streams for an international audeince regularly. Due to the number of languages spoken by his viewers, he has created an "english only" rule in chat. If users find people chatting in a language other than english, they can enter the "!englando" command which will cause Nightbot to say 
+Elajjaz lives in Sweden, and streams for an international audeince regularly. Due to the number of languages spoken by his viewers, he has created an "english only" rule in chat. If users find people chatting in a language other than english, they can enter the `!englando` command which will cause [Nightbot](https://beta.nightbot.tv/) to say :
 
 ```
 englando in chat, pls FeelsBlyatMan
 ```
 
-Inspired by this, I thought with some decent data sanaization, a list of most commonly used words and some help from Google, we could write a bot to detect if a user is speaking a language other than English, and notify them.
+Inspired by this, I thought with some decent data sanaization, a list of most commonly used words, and some help from Google, we could write a bot to detect if a user is speaking a language other than English, and notify them.
 
 ## Challenges 
 
@@ -18,6 +18,27 @@ There are two main hurdles to overcome when writing this bot
 2. Google Translate API costs by the character 
 
 ## Getting Started
+
+This application uses several environment variables for configuration
+
+| Variable   | Use  | Required? |
+|------------|------|-----------|
+|TWITCH_CHANNEL| The name of the Channel on Twitch to join | Yes |
+|TWITCH_NICK| The nickname to present in the chatroom. | Yes |
+|TWITCH_TOKEN| The OAUTH API Key for authenticating to Twitch | Yes |
+|GOOGLE_API_KEY| Google Authentication token to the API Services for Language Detection  | No |
+
+## DotEnv
+
+For developer convience this application uses [dotenv](https://www.npmjs.com/package/dotenv) which allows users to define a text file to set environment variables. See the `.env.example` file for the 
+
+## Generating Twitch OAUTH Token
+
+Follow the instructions found [here](https://help.twitch.tv/customer/portal/articles/1302780-twitch-irc).
+
+## Generating Google Translate API Keys
+
+If you want to use Google Translate API follow their guide to setting up keys [here](https://cloud.google.com/translate/docs/getting-started).
 
 ## Process 
 With that in mind, the strategy is the following:
