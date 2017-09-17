@@ -1,5 +1,5 @@
 {
-  "name": "englado-bot",
+  "name": "englando-bot",
   "version": "0.0.1",
   "description": "",
   "main": "server.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/orthros/englado-bot.git"
+    "url": "git+https://github.com/orthros/englando-bot.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/orthros/englado-bot/issues"
+    "url": "https://github.com/orthros/englando-bot/issues"
   },
-  "homepage": "https://github.com/orthros/englado-bot#readme",
+  "homepage": "https://github.com/orthros/englando-bot#readme",
   "dependencies": {
     "dotenv": "^4.0.0",
     "irc-framework": "^2.9.1",
