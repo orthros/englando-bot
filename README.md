@@ -84,3 +84,5 @@ Since there is only one word in the message that is not in the top 10k then we w
 [ ] An extra "internet slang" dictionary to weed out other common words
 
 [ ] Update the README more
+
+[ ] Add a web interface to signup/use the bot
