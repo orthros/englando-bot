@@ -1,3 +1,4 @@
+//Remeber everything is in dotenv
 require("dotenv").config();
 const promisify = require("promisify-node");
 const request = require("request-promise");
